@@ -44,7 +44,7 @@ extern const std::vector<std::pair<RegexTag, std::regex>> REGEXEN = {
 
 const auto DATE_MAX_YEAR = 2050;
 const auto DATE_MIN_YEAR = 1000;
-constexpr std::initializer_list<std::pair<int, int>> DATE_SPLITS[] = {
+std::initializer_list<std::pair<int, int>> DATE_SPLITS[] = {
   {      // for length-4 strings, eg 1191 or 9111, two ways to split:
     {1, 2}, // 1 1 91 (2nd split starts at index 1, 3rd at index 2)
     {2, 3}, // 91 1 1
