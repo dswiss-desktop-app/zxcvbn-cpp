@@ -875,7 +875,7 @@ optional::optional<DMY> map_ints_to_dmy(const std::array<date_t, 3> & vals) {
 
 static
 optional::optional<DMY> map_ints_to_dm(const std::array<date_t, 2> & vals) {
-  for (const auto & item : {vals, {{vals[1], vals[0]}}}) {
+  for (const auto & item : std::initializer_list<std::array<date_t, 2>>{vals, {{vals[1], vals[0]}}}) {
     auto d = item[0], m = item[1];
     if (1 <= d && d <= 31 && 1 <= m && m <= 12) {
       return DMY{0, m, d};
