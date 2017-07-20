@@ -26,7 +26,11 @@ std::string ascii_lower(const std::string & in) {
 }
 
 std::string reverse_string(const std::string & in) {
+#ifdef _MSC_VER
   std::wstring_convert<std::codecvt_utf8<int32_t>, int32_t> conv;
+#else
+  std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> conv;
+#endif
   auto ret = conv.from_bytes(in);
   std::reverse(ret.begin(), ret.end());
   return conv.to_bytes(ret);
@@ -48,10 +52,10 @@ bool utf8_valid(std::string::const_iterator start,
 
     auto res = char32_conv.in(st, from, from_end, from_next,
                               &new_char, &new_char + 1, to_next);
-    if (!((!res &&
-           from_next != from_end) ||
-          (res &&
-           from_next == from_end))) {
+    if (!((res == std::codecvt_base::partial &&
+              from_next != from_end) ||
+             (res == std::codecvt_base::ok &&
+              from_next == from_end))) {
       return false;
     }
     start += (from_next - from);
