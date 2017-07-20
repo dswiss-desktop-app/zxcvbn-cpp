@@ -11,6 +11,13 @@
 #include <cstdint>
 #include <cassert>
 
+
+#if defined(_MSC_VER) && _MSC_VER <= 1900
+#define CONSTEXPR
+#else
+#define CONSTEXPR constexpr
+#endif
+
 namespace zxcvbn {
 
 namespace optional {
@@ -57,7 +64,12 @@ class optional {
  public:
   constexpr optional() : _null_state('\0'), _engaged(false) {}
 
-  constexpr optional(nullopt_t) : optional() {}
+  constexpr optional(nullopt_t)
+#if defined(_MSC_VER) && _MSC_VER <= 1900
+      : _null_state('\0'), _engaged(false) {}
+#else
+      : optional() {}
+#endif
 
   constexpr optional(const T & val) : _val(val), _engaged(true) {}
   constexpr optional(T && val) : _val(std::move(val)), _engaged(true) {}
@@ -90,27 +102,27 @@ class optional {
     }
   }
 
-  constexpr const T *operator->() const {
+  CONSTEXPR const T *operator->() const {
     return &_val;
   }
 
-  constexpr T *operator->() {
+  CONSTEXPR T *operator->() {
     return &_val;
   }
 
-  constexpr const T & operator*() const & {
+  CONSTEXPR const T & operator*() const & {
     return _val;
   }
 
-  constexpr T & operator*() & {
+  CONSTEXPR T & operator*() & {
     return _val;
   }
 
-  constexpr T && operator*() const && {
+  CONSTEXPR T && operator*() const && {
     return std::move(_val);
   }
 
-  constexpr T && operator*() && {
+  CONSTEXPR T && operator*() && {
     return std::move(_val);
   }
 
