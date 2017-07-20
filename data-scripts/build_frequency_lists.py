@@ -191,32 +191,40 @@ namespace _frequency_lists {
         tw.drop_whitespace = True
         tw.break_long_words = False
         tw.break_on_hyphens = False
-        f.write("const char *const FREQ_LISTS[] = {\n")
+        f.write("std::initializer_list<const char *> const FREQ_LISTS[] = {\n")
 
         for name, lst in freq_lists_alist:
-            f.write('"')
+            f.write(' {"')
+            curLiteralLen = 0
             for word in lst:
                 assert len(word) <= 255
                 f.write("\\%03o" % (len(word),))
                 f.write(escape(word))
-            f.write('",\n')
+                curLiteralLen += len(word) + 3
+                if curLiteralLen > 1000:
+                    f.write('",\n   "')
+                    curLiteralLen = 0
+            f.write('"},\n')
         f.write("};\n\n")
 
         f.write("""
 class WordIterator {
-  const char *_words;
+    const char* const* _words;
+    const char* const* _end;
+    int pos;
     std::string _cur;
 
 
   std::string _get_cur() {
-    auto len = _words[0];
+    if (_words == _end) return std::string();
+    auto len = (*_words)[pos];
     if (!len) return std::string();
-    return std::string(&_words[1], &_words[1 + len]);
+    return std::string(&(*_words)[pos + 1], &(*_words)[pos + 1 + len]);
   }
 
 public:
-  WordIterator(const char *words) :
-    _words(words), _cur(_get_cur()) {}
+  WordIterator(const char* const* words, const char* const* end) :
+    _words(words), _end(end), pos(0), _cur(_get_cur()) {}
 
 
   std::string & operator *() {
@@ -228,30 +236,33 @@ public:
   }
 
   WordIterator & operator++() {
-    _words += 1 + _words[0];
+    pos += 1 + (*_words)[pos + 0];
+    if ((*_words)[pos] == '\\0') {
+        _words++;
+        pos = 0;
+    }
     _cur = _get_cur();
     return *this;
   }
 
   bool operator!=(const WordIterator & rhs) const {
-    return rhs._words != _words;
+    return rhs._words != _words || rhs.pos != pos;
   }
 };
 
 class WordIterable {
-  const char *_words;
-  const std::size_t _len;
+  std::initializer_list<const char *> _words;
 
 public:
-  WordIterable(const char *words, std::size_t len)
-    : _words(words), _len(len) {}
+  WordIterable(const std::initializer_list<const char *> &words)
+    : _words(words) {}
 
   WordIterator begin() const {
-    return WordIterator(_words);
+    return WordIterator(_words.begin(), _words.end());
   }
 
   WordIterator end() const {
-    return WordIterator(_words + _len);
+    return WordIterator(_words.end(), _words.end());
   }
 };
 
@@ -261,7 +272,7 @@ std::unordered_map<DictionaryTag, RankedDict> build_static_ranked_dicts() {
   std::underlying_type_t<DictionaryTag> tag_idx = 0;
   for (const auto & strs : FREQ_LISTS) {
     toret.insert(std::make_pair(static_cast<DictionaryTag>(tag_idx),
-                                build_ranked_dict(WordIterable(strs, std::strlen(strs)))));
+                                build_ranked_dict(WordIterable(strs))));
     tag_idx += 1;
   }
   return toret;
