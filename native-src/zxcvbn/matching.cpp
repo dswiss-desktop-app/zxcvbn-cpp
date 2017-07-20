@@ -548,7 +548,7 @@ std::vector<Match> sequence_match(const std::string & password) {
           sequence_space = 10;
         }
         else {
-          sequence_name = SequenceTag::UNICODE;
+          sequence_name = SequenceTag::UTF;
           sequence_space = 26;
         }
         result.push_back(Match(i, j, token,

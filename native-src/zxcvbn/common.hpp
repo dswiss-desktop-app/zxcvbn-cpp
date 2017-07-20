@@ -38,7 +38,7 @@ enum class SequenceTag {
   UPPER,
   LOWER,
   DIGITS,
-  UNICODE,
+  UTF,
 };
 
 struct PortableRegexMatch {
