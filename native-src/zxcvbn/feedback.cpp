@@ -115,7 +115,7 @@ Feedback get_dictionary_match_feedback(const Match & match_, bool is_sole_match)
   auto & match = match_.get_dictionary();
   auto warning = [&] {
     if (match.dictionary_tag == DictionaryTag::PASSWORDS) {
-      if (is_sole_match and !match.l33t and !match.reversed) {
+      if (is_sole_match && !match.l33t && !match.reversed) {
         if (match.rank <= 10) {
           return "This is a top-10 common password";
         }
@@ -154,13 +154,13 @@ Feedback get_dictionary_match_feedback(const Match & match_, bool is_sole_match)
   if (std::regex_search(word, START_UPPER)) {
     suggestions.push_back("Capitalization doesn't help very much");
   }
-  else if (std::regex_search(word, ALL_UPPER) and
+  else if (std::regex_search(word, ALL_UPPER) &&
            // XXX: UTF-8
            util::ascii_lower(word) == word) {
     suggestions.push_back("All-uppercase is almost as easy to guess as all-lowercase");
   }
 
-  if (match.reversed and match_.token.length() >= 4) {
+  if (match.reversed && match_.token.length() >= 4) {
     suggestions.push_back("Reversed words aren't much harder to guess");
   }
   if (match.l33t) {
