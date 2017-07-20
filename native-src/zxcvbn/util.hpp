@@ -6,6 +6,12 @@
 
 #include <cmath>
 
+#ifdef _MSC_VER
+#define PURE
+#else
+#define PURE __attribute__((pure))
+#endif
+
 namespace zxcvbn {
 
 namespace util {
@@ -26,8 +32,8 @@ std::string ascii_lower(const std::string &);
 std::string reverse_string(const std::string &);
 std::string::size_type character_len(const std::string &,
                                      std::string::size_type start,
-                                     std::string::size_type end) __attribute__((pure));
-std::string::size_type character_len(const std::string &)  __attribute__((pure));
+                                     std::string::size_type end) PURE;
+std::string::size_type character_len(const std::string &) PURE;
 
 std::pair<char32_t, std::string::iterator> utf8_decode(std::string::iterator);
 std::pair<char32_t, std::string::const_iterator> utf8_decode(std::string::const_iterator);

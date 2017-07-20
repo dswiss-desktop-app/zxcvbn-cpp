@@ -9,6 +9,12 @@
 
 #include <cmath>
 
+#ifdef _MSC_VER
+#define PURE
+#else
+#define PURE __attribute__((pure))
+#endif
+
 namespace std {
 
 template<class T, class U>
@@ -48,7 +54,7 @@ void insert_or_assign(M & m, const K & k, V && v) {
 }
 
 static
-std::size_t token_len(const Match & m) __attribute__((pure));
+std::size_t token_len(const Match & m) PURE;
 
 static
 std::size_t token_len(const Match & m) {
