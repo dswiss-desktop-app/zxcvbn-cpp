@@ -116,9 +116,9 @@ std::pair<char32_t, It> _utf8_decode(It it, It end) {
   const char *from_next;
   auto res = char32_conv.in(st, from, from_end, from_next,
                             &new_char, &new_char + 1, to_next);
-  assert((res == std::codecvt_utf8<char32_t>::result::partial &&
+  assert((res == std::codecvt_utf8<char32_t>::partial &&
           from_next != from_end) ||
-         (res == std::codecvt_utf8<char32_t>::result::ok &&
+         (res == std::codecvt_utf8<char32_t>::ok &&
           from_next == from_end));
   (void) res;
 
