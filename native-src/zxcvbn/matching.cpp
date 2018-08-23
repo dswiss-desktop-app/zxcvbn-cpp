@@ -76,8 +76,9 @@ std::string translate(const std::string & string,
   std::string toret;
   auto bit = std::back_inserter(toret);
   toret.reserve(string.size());
-  for (auto it = string.begin(); it != string.end();) {
-    auto nextit = util::utf8_iter(it, string.end());
+  const char *cstring = string.c_str();
+  for (auto it = cstring; it != cstring + string.length();) {
+    auto nextit = util::utf8_iter(it, cstring + string.length());
     auto ch = std::string(it, nextit);
     auto mit = chr_map.find(ch);
     if (mit != chr_map.end()) {

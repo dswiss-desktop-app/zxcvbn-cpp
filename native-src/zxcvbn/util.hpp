@@ -35,15 +35,11 @@ std::string::size_type character_len(const std::string &,
                                      std::string::size_type end) PURE;
 std::string::size_type character_len(const std::string &) PURE;
 
-std::pair<char32_t, std::string::iterator> utf8_decode(std::string::iterator);
-std::pair<char32_t, std::string::const_iterator> utf8_decode(std::string::const_iterator);
 char32_t utf8_decode(const std::string & start,
                      std::string::size_type & idx);
 
-std::string::iterator utf8_iter(std::string::iterator start,
-                                std::string::iterator end);
-std::string::const_iterator utf8_iter(std::string::const_iterator start,
-                                      std::string::const_iterator end);
+const char *utf8_iter(const char *start, const char *end);
+
 
 
 

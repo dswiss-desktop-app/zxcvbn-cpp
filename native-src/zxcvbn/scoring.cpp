@@ -316,8 +316,9 @@ guesses_t repeat_guesses(const Match & match) {
 }
 
 guesses_t sequence_guesses(const Match & match) {
-  auto second_chr_pos = util::utf8_iter(match.token.begin(), match.token.end());
-  auto first_chr = std::string(match.token.begin(), second_chr_pos);
+  const char *cstring = match.token.c_str();
+  auto second_chr_pos = util::utf8_iter(cstring, cstring + match.token.length());
+  auto first_chr = std::string(cstring, second_chr_pos);
   guesses_t base_guesses;
   // lower guesses for obvious starting points
   if (first_chr == "a" || first_chr == "A" || first_chr == "z" ||
@@ -459,8 +460,9 @@ guesses_t uppercase_variations(const Match & match) {
   // the number of ways to lowercase U+L letters with L lowercase letters or less.
   auto match_chr = [] (const std::string & str, const std::regex & regex) {
     decltype(str.length()) toret = 0;
-    for (auto it = str.begin(); it != str.end();) {
-      auto it2 = util::utf8_iter(it, str.end());
+    const char *cstring = str.c_str();
+    for (auto it = cstring; it != cstring + str.length();) {
+      auto it2 = util::utf8_iter(it, cstring + str.length());
       auto s = std::string(it, it2);
       if (std::regex_match(s, regex)) {
         toret += 1;
@@ -490,8 +492,9 @@ guesses_t l33t_variations(const Match & match) {
     // XXX: using ascii_lower is okay for now since our
     // sub dictionaries are ascii only
     auto ltoken = util::ascii_lower(match.token);
-    for (auto it = ltoken.begin(); it != ltoken.end();) {
-      auto it2 = util::utf8_iter(it, ltoken.end());
+    const char *cstring = ltoken.c_str();
+    for (auto it = cstring; it != cstring + ltoken.length();) {
+      auto it2 = util::utf8_iter(it, cstring + ltoken.length());
       auto cs = std::string(it, it2);
       if (cs == subbed) S += 1;
       if (cs == unsubbed) U += 1;

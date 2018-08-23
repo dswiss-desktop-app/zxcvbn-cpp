@@ -75,25 +75,18 @@ It _utf8_iter(It start, It end) {
   return start + amt;
 }
 
-std::string::iterator utf8_iter(std::string::iterator start,
-                                std::string::iterator end) {
-  return _utf8_iter(start, end);
-}
-
-std::string::const_iterator utf8_iter(std::string::const_iterator start,
-                                      std::string::const_iterator end) {
+const char *utf8_iter(const char *start, const char *end) {
   return _utf8_iter(start, end);
 }
 
 std::string::size_type character_len(const std::string & str,
                                      std::string::size_type start,
                                      std::string::size_type end) {
-  assert(utf8_valid(str.begin() + start, str.begin() + end));
-
   std::string::size_type clen = 0;
-  for (auto it = str.begin() + start;
-        it != str.begin() + end;
-        it = utf8_iter(it, str.begin() + end)) {
+  const char *cstring = str.c_str();
+  for (auto it = cstring + start;
+        it != cstring + end;
+        it = utf8_iter(it, cstring + end)) {
     clen += 1;
   }
   return clen;
@@ -116,15 +109,11 @@ std::pair<char32_t, It> _utf8_decode(It it, It end) {
   const char *from_next;
   auto res = char32_conv.in(st, from, from_end, from_next,
                             &new_char, &new_char + 1, to_next);
-  assert((res == std::codecvt_utf8<char32_t>::partial &&
-          from_next != from_end) ||
-         (res == std::codecvt_utf8<char32_t>::ok &&
-          from_next == from_end));
   (void) res;
 
   return std::make_pair(new_char, it + (from_next - from));
 }
-
+/*
 std::pair<char32_t, std::string::iterator> utf8_decode(std::string::iterator start,
                                                        std::string::iterator end) {
   return _utf8_decode(start, end);
@@ -134,11 +123,12 @@ std::pair<char32_t, std::string::const_iterator> utf8_decode(std::string::const_
                                                              std::string::const_iterator end) {
   return _utf8_decode(start, end);
 }
-
+*/
 char32_t utf8_decode(const std::string & start,
                      std::string::size_type & idx) {
-  auto ret = _utf8_decode(start.begin() + idx, start.end());
-  idx += ret.second - (start.begin() + idx);
+  const char *cstring = start.c_str();
+  auto ret = _utf8_decode(cstring + idx, cstring + start.length());
+  idx += (start.begin() + (ret.second - cstring)) - (start.begin() + idx);
   return ret.first;
 }
 
