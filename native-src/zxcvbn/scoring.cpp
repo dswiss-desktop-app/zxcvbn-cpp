@@ -59,7 +59,7 @@ std::size_t token_len(const Match & m) PURE;
 static
 std::size_t token_len(const Match & m) {
   std::size_t result = m.j - m.i + 1;
-  assert(result == util::character_len(m.token));
+  //assert(result == util::character_len(m.token));
   return result;
 }
 
