@@ -82,14 +82,9 @@ const char *utf8_iter(const char *start, const char *end) {
 std::string::size_type character_len(const std::string & str,
                                      std::string::size_type start,
                                      std::string::size_type end) {
-  std::string::size_type clen = 0;
-  const char *cstring = str.c_str();
-  for (auto it = cstring + start;
-        it != cstring + end;
-        it = utf8_iter(it, cstring + end)) {
-    clen += 1;
-  }
-  return clen;
+    std::mbstate_t mbst;
+    auto len = char32_conv.length(mbst, str.c_str() + start, str.c_str() + end, end - start);
+    return len;
 }
 
 std::string::size_type character_len(const std::string & str) {
