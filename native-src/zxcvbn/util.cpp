@@ -83,8 +83,16 @@ std::string::size_type character_len(const std::string & str,
                                      std::string::size_type start,
                                      std::string::size_type end) {
     std::mbstate_t mbst;
-    auto len = char32_conv.length(mbst, str.c_str() + start, str.c_str() + end, end - start);
-    return len;
+    std::string::size_type pos = start, count = 0;
+    while (pos < end) {
+        std::string::size_type consumed = char32_conv.length(mbst, str.c_str() + pos, str.c_str() + end, 1);
+        if(consumed > 0) {
+            pos += consumed;
+            count++;
+        }
+        else pos = end;
+    }
+    return count;
 }
 
 std::string::size_type character_len(const std::string & str) {
