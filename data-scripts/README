@@ -1,0 +1,39 @@
+— README
+
+-- Index of dictionaries can be found inside this ts script:
+https://github.com/zxcvbn-ts/zxcvbn/blob/master/data-scripts/lists.ts
+
+
+-- GitHub Project of Frequency Word List Generator and processed files:
+Project Name: Repository for Frequency Word List Generator and processed files
+Link: https://github.com/hermitdave/FrequencyWords
+
+Full Contents:
+https://github.com/hermitdave/FrequencyWords/tree/master/content
+
+German Dictionaries:
+https://github.com/hermitdave/FrequencyWords/tree/master/content/2018/de
+
+The C/C++ port zxcvbn-cpp needs to use ASCII-only dictionaries.
+However, the German dictionary files are Unicode-UTF8 encoded files and many words contain non-ASCII characters.
+
+German 50K common words dictionary with occurrences (frequency list):
+https://github.com/hermitdave/FrequencyWords/blob/master/content/2018/de/de_50k.txt
+https://raw.githubusercontent.com/hermitdave/FrequencyWords/master/content/2018/de/de_50k.txt
+
+German first names dictionary (not used):
+https://gist.githubusercontent.com/hrueger/2aa48086e9720ee9b87ec734889e1b15/raw
+
+German last names dictionary (not used):
+https://gist.githubusercontent.com/hrueger/6599d1ac1e03b4c3dc432d722ffcefd0/raw
+
+The German dictionary de.txt was produced as an ASCII-only text file from de_50k.txt.
+The script data-scripts/non-ascii-conv.sh was run on it, but a second manual cleaning was needed to remove some non-German words still containing non-ASCII characters.
+
+The final ASCII-only text file de.txt was added to the dictionaries processed by the python script data-scripts/build_frequency_lists.py
+Finally, the script data-scripts/update-frequency-lists.sh was run to generate the CPP files:
+
+zxcvbn-cpp/native-src/zxcvbn/_frequency_lists.cpp
+zxcvbn-cpp/native-src/zxcvbn/_frequency_lists.hpp
+zxcvbn-cpp/native-src/zxcvbn/adjacency_graphs.cpp
+zxcvbn-cpp/native-src/zxcvbn/adjacency_graphs.hpp

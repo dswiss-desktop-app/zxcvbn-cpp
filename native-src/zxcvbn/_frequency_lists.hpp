@@ -12,6 +12,7 @@ namespace zxcvbn {
 namespace _frequency_lists {
 
 enum class DictionaryTag {
+  DE,
   ENGLISH_WIKIPEDIA,
   FEMALE_NAMES,
   MALE_NAMES,
