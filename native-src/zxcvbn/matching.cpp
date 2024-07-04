@@ -108,12 +108,11 @@ std::string dict_normalize(const std::string & str) {
 }
 
 std::vector<Match> omnimatch(const std::string & password,
-                             const std::vector<std::string> & ordered_list) {
+                             const RankedDict & userDict) {
   auto ranked_dictionaries = default_ranked_dicts();
 
-  auto ranked_dict = build_ranked_dict(ordered_list);
   ranked_dictionaries.insert(std::make_pair(DictionaryTag::USER_INPUTS,
-                                            std::cref(ranked_dict)));
+                                            std::cref(userDict)));
 
   std::vector<Match> matches;
   std::function<std::vector<Match>(const std::string &)> matchers[] = {
